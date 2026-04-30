@@ -1,9 +1,9 @@
 FROM php:7.4-apache
 
 # Fix Debian archive sources (required for old images)
-RUN sed -i 's|deb.debian.org|archive.debian.org|g' /etc/apt/sources.list && \
-    sed -i '/security.debian.org/d' /etc/apt/sources.list && \
-    apt-get -o Acquire::Check-Valid-Until=false update
+RUN printf "deb http://archive.debian.org/debian bullseye main contrib non-free\n" > /etc/apt/sources.list && \
+    printf 'Acquire::Check-Valid-Until "false";\nAcquire::AllowInsecureRepositories "true";\n' > /etc/apt/apt.conf.d/99archive && \
+    apt-get update
 
 # Install system packages (fixed names)
 RUN apt-get install -y \
